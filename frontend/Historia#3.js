@@ -6,7 +6,7 @@ import { doc, updateDoc } from 'firebase/firestore';
 const IndicadorCancelacion = ({ 
     confirmacionCancelacion, 
     reservaId,
-    mensaje = 'Cancelando...', 
+    mensaje = 'Cancelando reserva...', // Mensaje más descriptivo
     onAnimacionCompleta
 }) => {
     const [error, setError] = useState(null);
@@ -18,7 +18,8 @@ const IndicadorCancelacion = ({
                     const reservaRef = doc(db, 'reservas', reservaId);
                     await updateDoc(reservaRef, {
                         estado: 'cancelada',
-                        fechaCancelacion: new Date().toISOString()
+                        fechaCancelacion: new Date().toISOString(),
+                        actualizadoEn: new Date().toISOString() // Agregamos timestamp
                     });
                     
                     setTimeout(() => {
@@ -27,7 +28,7 @@ const IndicadorCancelacion = ({
                         }
                     }, 2000);
                 } catch (err) {
-                    setError('Error: No se pudo cancelar la reserva'); // Mensaje más descriptivo
+                    setError('Error: No se pudo cancelar la reserva. Intente nuevamente.'); // Mensaje más informativo
                     console.error('Error en cancelación:', err);
                 }
             };
